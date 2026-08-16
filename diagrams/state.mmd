@@ -1,0 +1,11 @@
+stateDiagram-v2
+    [*] --> Empty
+    Empty --> Loading: submit valid city (>=2 chars)
+    Loading --> Loading: new search submitted (cancel/ignore stale)
+    Loading --> Success: geocode + forecast OK
+    Loading --> NotFound: geocode returns no results
+    Loading --> NetworkError: fetch/HTTP failure
+    NotFound --> Loading: user searches again
+    NetworkError --> Loading: user searches again
+    Success --> Loading: user searches another city
+    Success --> Success: show current + 7-day forecast

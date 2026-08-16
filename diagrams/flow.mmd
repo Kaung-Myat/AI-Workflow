@@ -1,0 +1,16 @@
+flowchart TD
+    A[User opens app] --> B[Empty state: prompt to search]
+    B --> C[User types city + submits]
+    C --> D{City length >= 2?}
+    D -- No --> C
+    D -- Yes --> E[Loading state shown]
+    E --> F[Geocode city name]
+    F --> G{Found?}
+    G -- No --> H[Error: City not found]
+    H --> C
+    G -- Yes --> I[Fetch current + 7-day forecast]
+    I --> J{Success?}
+    J -- No --> K[Error: network failure]
+    K --> C
+    J -- Yes --> L[Success: show current conditions + 7-day forecast]
+    L --> C

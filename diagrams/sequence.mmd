@@ -1,0 +1,24 @@
+sequenceDiagram
+    participant U as User
+    participant A as App (React)
+    participant G as Open-Meteo Geocoding API
+    participant F as Open-Meteo Forecast API
+
+    U->>A: submit city name
+    A->>A: status = loading
+    A->>G: GET /v1/search?name=<city>&count=1
+    alt geocode returns no results
+        G-->>A: { results: null }
+        A->>U: error "City not found" (status = error)
+    else geocode succeeds
+        G-->>A: results[0]: name, lat, lon, admin1, country
+        A->>F: GET /v1/forecast?lat..&lon..&current=..&daily=..&timezone=auto
+        alt forecast fetch fails
+            F-->>A: network / HTTP error
+            A->>U: error "Something went wrong" (status = error)
+        else forecast succeeds
+            F-->>A: current + daily JSON
+            A->>A: status = success
+            A->>U: render current conditions + 7-day forecast
+        end
+    end
